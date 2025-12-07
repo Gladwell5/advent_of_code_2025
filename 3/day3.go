@@ -8,7 +8,28 @@ import (
 	"strconv"
 )
 
+func GetMaxJoltage(joltages string, n_batteries int) (joltage int) {
+	joltage_str := ""
+	from_idx := 0
+	to_idx := 0
+	last_idx := -1
+	battery_idx := 0
+	for i := 1; i <= n_batteries; i++ {
+		from_idx = (last_idx + 1)
+		to_idx = len(joltages) - (n_batteries - i)
+		battery_idx = utils.GetMaxIndex(string(joltages[from_idx:to_idx])) + from_idx
+		joltage_str += string(joltages[battery_idx])
+		last_idx = battery_idx
+	}
+	joltage, _ = strconv.Atoi(joltage_str)
+	return joltage
+}
+
 func main() {
+	var joltage int
+	total_joltage := 0
+	n_batteries := 12
+
 	filename := "3/3.txt"
 
 	inputFile, err := os.Open(filename)
@@ -20,26 +41,9 @@ func main() {
 
 	scanner := bufio.NewScanner(inputFile)
 
-	total_joltage := 0
-	n_batteries := 12
-
 	for scanner.Scan() {
 		line := scanner.Text()
-		joltage_str := string("")
-		joltage := 0
-		from_index := 0
-		to_index := 0
-		last_index := -1
-		battery_index := 0
-		for i := 1; i <= n_batteries; i++ {
-			from_index = (last_index + 1)
-			to_index = len(line) - (n_batteries - i)
-			battery_index = utils.GetMaxIndex(string(line[from_index:to_index])) + from_index
-			joltage_str += string(line[battery_index])
-			last_index = battery_index
-		}
-		// fmt.Print(joltage_str, "\n")
-		joltage, _ = strconv.Atoi(joltage_str)
+		joltage = GetMaxJoltage(line, n_batteries)
 		total_joltage += joltage
 	}
 	fmt.Print(total_joltage, "\n")
