@@ -10,7 +10,6 @@ import (
 )
 
 func GetNextLocs(loc int, splitters []int) (next_beam_locs []int, is_split bool) {
-	is_split = false
 	if slices.Contains(splitters, loc) {
 		for _, adj := range []int{-1, 1} {
 			if !slices.Contains(next_beam_locs, loc+adj) {
@@ -22,12 +21,13 @@ func GetNextLocs(loc int, splitters []int) (next_beam_locs []int, is_split bool)
 		if !slices.Contains(next_beam_locs, loc) {
 			next_beam_locs = append(next_beam_locs, loc)
 		}
+		is_split = false
 	}
 	return next_beam_locs, is_split
 }
 
 func GetNextLevel(beam_locs []int, last_level map[int]int, splitters []int) (level map[int]int, split_count int) {
-	level = make(map[int]int)
+	level = make(map[int]int) // maps need to be initialised
 	for _, beam_loc := range beam_locs {
 		path_count := last_level[beam_loc]
 		next_locs, is_split := GetNextLocs(beam_loc, splitters)
@@ -35,6 +35,7 @@ func GetNextLevel(beam_locs []int, last_level map[int]int, splitters []int) (lev
 			split_count += 1
 		}
 		for _, next_loc := range next_locs {
+			// if next_loc already in level, add to the count
 			if slices.Contains(utils.GetKeys(level), next_loc) {
 				level[next_loc] += path_count
 			} else {
@@ -46,6 +47,11 @@ func GetNextLevel(beam_locs []int, last_level map[int]int, splitters []int) (lev
 }
 
 func main() {
+	var beam_locs []int
+	var splitters []int
+	var total_paths int
+	var total_split_count int
+	var paths []map[int]int
 	filename := "7/7.txt"
 
 	inputFile, err := os.Open(filename)
@@ -57,10 +63,6 @@ func main() {
 
 	scanner := bufio.NewScanner(inputFile)
 
-	var beam_locs []int
-	var splitters []int
-	var total_split_count int
-	var paths []map[int]int
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.Contains(line, "S") {
@@ -75,10 +77,11 @@ func main() {
 			paths = append(paths, level)
 		}
 	}
-	total_paths := 0
+
 	for _, value := range paths[len(paths)-1] {
 		total_paths += value
 	}
+
 	fmt.Print(total_split_count, "\n")
 	fmt.Print(total_paths, "\n")
 }

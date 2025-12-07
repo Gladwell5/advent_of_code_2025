@@ -54,10 +54,13 @@ func main() {
 			verticals = append(verticals, line)
 		}
 	}
+	// pad operations if shorter than verticals
 	for len(operators) < max_line_len {
 		operators += " "
 	}
 
+	// work from right to left with idx and then down
+	// the rows with the GetVerticalNumber function
 	for idx := max_line_len - 1; idx >= 0; idx-- {
 		vertical_int, err := GetVerticalNumber(verticals, idx)
 		// err in converting to int happens when entire vertical is space
