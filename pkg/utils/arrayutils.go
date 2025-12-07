@@ -73,11 +73,11 @@ func RemoveStruct(list []Loc, loc Loc) []Loc {
 }
 
 func GetAccessible(rolls []Loc, grid_shape []int) (accessible []Loc) {
-	neighbour_count := 0
+	var neighbour_count int
 	for _, loc := range rolls {
 		neighbour_count = 0
-		for _, neigh_loc := range GetNeighbourLocs(loc, grid_shape) {
-			if ContainsStruct(rolls, neigh_loc) {
+		for _, neighbour_loc := range GetNeighbourLocs(loc, grid_shape) {
+			if ContainsStruct(rolls, neighbour_loc) {
 				neighbour_count += 1
 			}
 		}

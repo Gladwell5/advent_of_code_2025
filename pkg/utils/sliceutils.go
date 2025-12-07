@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"slices"
 	"strconv"
 )
 
@@ -12,23 +13,14 @@ func Overlap(range1 []int, range2 []int) (overlapping bool, combined_range []int
 	if overlapping {
 		lower_bound := min(range1[0], range2[0])
 		upper_bound := max(range1[1], range2[1])
-		combined_range = append(combined_range, lower_bound, upper_bound)
+		combined_range = []int{lower_bound, upper_bound}
 	}
 	return overlapping, combined_range
 }
 
-func Contains(s []int, e int) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
-
 func DropIndexes(in_list [][]int, indexes []int) (out_list [][]int) {
 	for i, x := range in_list {
-		if Contains(indexes, i) {
+		if slices.Contains(indexes, i) {
 			continue
 		} else {
 			out_list = append(out_list, x)
@@ -50,16 +42,15 @@ func GetMaxIndex(x string) (max_x_i int) {
 	return max_x_i
 }
 
-func Product(num_list []int) int {
-	prod_num := 1
+func Product(num_list []int) (prod_num int) {
+	prod_num = 1
 	for _, num := range num_list {
 		prod_num *= num
 	}
 	return prod_num
 }
 
-func Sum(num_list []int) int {
-	sum_num := 0
+func Sum(num_list []int) (sum_num int) {
 	for _, num := range num_list {
 		sum_num += num
 	}

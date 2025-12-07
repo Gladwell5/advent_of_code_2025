@@ -11,7 +11,9 @@ import (
 )
 
 func main() {
+	var num_set []int
 	filename := "2/2.txt"
+	invalid_sum := 0
 
 	content, err := os.ReadFile(filename)
 	if err != nil {
@@ -19,10 +21,7 @@ func main() {
 	}
 
 	lines := strings.Split(string(content), ",")
-	invalid_sum := 0
 	for _, line := range lines {
-		var num_set []int
-
 		rng := strings.Split(line, "-")
 		upper_bound, _ := strconv.Atoi(rng[1])
 		lower_bound, _ := strconv.Atoi(rng[0])

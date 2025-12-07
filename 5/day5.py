@@ -1,12 +1,3 @@
-fresh = []
-ingredients = []
-with open("5/5.txt") as fs:
-    for line in fs.readlines():
-        if "-" in line:
-            fresh.append([int(n) for n in line[:-1].split("-")])
-        elif line != "\n":
-            ingredients.append(int(line[:-1]))
-
 def overlap(range1, range2):
     is_overlapping = True
     out_range = []
@@ -15,6 +6,16 @@ def overlap(range1, range2):
     if is_overlapping:
         out_range = [min(range1[0], range2[0]), max(range1[1], range2[1])]
     return is_overlapping, out_range
+
+fresh = []
+ingredients = []
+
+with open("5/5.txt") as fs:
+    for line in fs.readlines():
+        if "-" in line:
+            fresh.append([int(n) for n in line[:-1].split("-")])
+        elif line != "\n":
+            ingredients.append(int(line[:-1]))
 
 while True:
     last_n_fresh = len(fresh)

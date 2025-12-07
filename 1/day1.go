@@ -40,6 +40,11 @@ func GetNextLoc(loc int, rotation int, direction string) (next_loc int, zero_cou
 }
 
 func main() {
+	var next_loc int
+	var zero_counts int
+	loc := 50
+	total_zero_counts := 0
+
 	inputFile, err := os.Open("1/1.txt")
 	if err != nil {
 		fmt.Println("Error opening input file:", err)
@@ -48,11 +53,6 @@ func main() {
 	defer inputFile.Close()
 
 	scanner := bufio.NewScanner(inputFile)
-
-	loc := 50
-	var next_loc int
-	var zero_counts int
-	total_zero_counts := 0
 
 	for scanner.Scan() {
 		line := scanner.Text()
