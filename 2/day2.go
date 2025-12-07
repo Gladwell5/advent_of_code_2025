@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -20,34 +21,24 @@ func main() {
 	lines := strings.Split(string(content), ",")
 	invalid_sum := 0
 	for _, line := range lines {
-		num_set := map[int]struct{}{}
+		var num_set []int
 
-		m := strings.Split(line, "-")
+		rng := strings.Split(line, "-")
+		upper_bound, _ := strconv.Atoi(rng[1])
+		lower_bound, _ := strconv.Atoi(rng[0])
 
-		upper_bound, _ := strconv.Atoi(m[1])
-		lower_bound, _ := strconv.Atoi(m[0])
-
-		// start_stem := m[0][:int(math.Floor(float64(len(m[0]))/2))]
-		// start_int, _ := strconv.Atoi(start_stem)
-		start_int := 1
-
-		end_stem := m[1][:int(math.Ceil(float64(len(m[1]))/2))]
+		// max stem is first half of upper range value
+		// max value is max stam repeated twice
+		end_stem := rng[1][:int(math.Ceil(float64(len(rng[1]))/2))]
 		end_int, _ := strconv.Atoi(end_stem)
 
-		// fmt.Print(m, "\n")
-
-		for i := start_int; i <= end_int; i++ {
-			i_str := strconv.Itoa(i)
-			for n := 2; n <= len(m[1]); n++ {
-				i_rep, _ := strconv.Atoi(strings.Repeat(i_str, n))
-				if lower_bound <= i_rep {
-					if i_rep <= upper_bound {
-						_, found := num_set[i_rep]
-						if !found {
-							// fmt.Print(i_rep, "\n")
-							num_set[i_rep] = struct{}{}
-							invalid_sum += i_rep
-						}
+		for i := 1; i <= end_int; i++ {
+			for n := 2; n <= len(rng[1]); n++ {
+				i_rep, _ := strconv.Atoi(strings.Repeat(strconv.Itoa(i), n))
+				if lower_bound <= i_rep && i_rep <= upper_bound {
+					if !slices.Contains(num_set, i_rep) {
+						num_set = append(num_set, i_rep)
+						invalid_sum += i_rep
 					}
 				}
 			}
