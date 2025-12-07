@@ -7,6 +7,38 @@ import (
 	"strconv"
 )
 
+func GetNextLoc(loc int, rotation int, direction string) (next_loc int, zero_counts int) {
+	if direction == "L" {
+		next_loc = loc - rotation
+	} else {
+		next_loc = loc + rotation
+	}
+	if next_loc < 0 {
+		if loc == 0 {
+			zero_counts -= 1
+		}
+		for {
+			next_loc += 100
+			zero_counts += 1
+			if next_loc >= 0 {
+				break
+			}
+		}
+	} else if next_loc >= 100 {
+		for {
+			next_loc -= 100
+			zero_counts += 1
+			if next_loc == 0 {
+				zero_counts -= 1
+				break
+			} else if next_loc < 100 {
+				break
+			}
+		}
+	}
+	return next_loc, zero_counts
+}
+
 func main() {
 	inputFile, err := os.Open("1/1.txt")
 	if err != nil {
@@ -19,55 +51,22 @@ func main() {
 
 	loc := 50
 	var next_loc int
-	zero_counts := 0
+	var zero_counts int
+	total_zero_counts := 0
 
 	for scanner.Scan() {
 		line := scanner.Text()
 		direction := line[:1]
-		rotation, err := strconv.Atoi(line[1:])
+		rotation, _ := strconv.Atoi(line[1:])
 
-		if err != nil {
-			fmt.Println("Error converting string to integer:", err)
-			return // Exit if there's an error
-		}
-
-		if direction == "L" {
-			next_loc = loc - rotation
-			if next_loc < 0 {
-				if loc == 0 {
-					zero_counts -= 1
-				}
-				for {
-					next_loc += 100
-					zero_counts += 1
-					if next_loc >= 0 {
-						break
-					}
-				}
-			}
-		} else {
-			next_loc = loc + rotation
-			if next_loc >= 100 {
-				for {
-					next_loc -= 100
-					zero_counts += 1
-					if next_loc == 0 {
-						zero_counts -= 1
-						break
-					} else if next_loc < 100 {
-						break
-					}
-				}
-			}
-		}
+		next_loc, zero_counts = GetNextLoc(loc, rotation, direction)
+		total_zero_counts += zero_counts
 
 		if next_loc == 0 {
-			zero_counts += 1
+			total_zero_counts += 1
 		}
 
 		loc = next_loc
-
-		// fmt.Print(zero_counts, "\n")
 	}
-	fmt.Print(zero_counts, "\n")
+	fmt.Print(total_zero_counts, "\n")
 }
