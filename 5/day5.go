@@ -39,14 +39,23 @@ func main() {
 
 	for {
 		last_len := len(fresh)
-		for idx := range last_len {
-			for jdx := range last_len {
-				if idx != jdx && idx < len(fresh) && jdx < len(fresh) {
-					is_overlap, new_range := utils.Overlap(fresh[idx], fresh[jdx])
-					if is_overlap {
-						fresh = utils.DropIndexes(fresh, []int{idx, jdx})
-						fresh = append(fresh, new_range)
-					}
+		for idx1 := range last_len {
+			// since fresh can reduce in size
+			// skip a loop if indexes are no longer valid
+			if idx1 >= len(fresh) {
+				continue
+			}
+			for idx2 := range last_len {
+				// skip also when indexes are the same
+				if idx2 >= len(fresh) || idx1 == idx2 {
+					continue
+				}
+				// if ranges overlap, drop them and add a new range
+				// with bounds that cover the full combined range
+				is_overlapping, combined_range := utils.Overlap(fresh[idx1], fresh[idx2])
+				if is_overlapping {
+					fresh = utils.DropIndexes(fresh, []int{idx1, idx2})
+					fresh = append(fresh, combined_range)
 				}
 			}
 		}
@@ -64,15 +73,14 @@ func main() {
 
 	n_fresh := 0
 	for _, ingredient := range ingredients {
-		for _, from_to := range fresh {
-			if from_to[0] <= ingredient {
-				if ingredient <= from_to[1] {
-					n_fresh += 1
-					break
-				}
+		for _, rng := range fresh {
+			if rng[0] <= ingredient && ingredient <= rng[1] {
+				n_fresh += 1
+				break
 			}
 		}
 	}
+
 	fmt.Print(fresh_ids, "\n")
 	fmt.Print(n_fresh, "\n")
 }
