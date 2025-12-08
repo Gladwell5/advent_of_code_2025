@@ -3,6 +3,7 @@ package utils
 import (
 	"slices"
 	"strconv"
+	"strings"
 )
 
 func Overlap(range1 []int, range2 []int) (overlapping bool, combined_range []int) {
@@ -55,4 +56,13 @@ func Sum(num_list []int) (sum_num int) {
 		sum_num += num
 	}
 	return sum_num
+}
+
+func AsPoint(line string) (point []int) {
+	var num_int int
+	for num := range strings.SplitSeq(line, ",") {
+		num_int, _ = strconv.Atoi(num)
+		point = append(point, num_int)
+	}
+	return point
 }
