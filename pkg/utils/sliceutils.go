@@ -30,6 +30,37 @@ func DropIndexes(in_list [][]int, indexes []int) (out_list [][]int) {
 	return out_list
 }
 
+func ListAsKey(list []int) (key string) {
+	str_items := []string{}
+	for _, item := range list {
+		str_items = append(str_items, strconv.Itoa(item))
+	}
+	key = strings.Join(str_items, ";")
+	return key
+}
+
+func Deduplicate(in_list [][]int) (out_list [][]int) {
+	added := []string{}
+	for _, x := range in_list {
+		x_key := ListAsKey(x)
+		if slices.Contains(added, x_key) {
+			continue
+		} else {
+			out_list = append(out_list, x)
+			added = append(added, x_key)
+		}
+	}
+	return out_list
+}
+
+func ContainsElement(list [][]int, element []int) bool {
+	x_keys := []string{}
+	for _, x := range list {
+		x_keys = append(x_keys, ListAsKey(x))
+	}
+	return slices.Contains(x_keys, ListAsKey(element))
+}
+
 func GetMaxIndex(x string) (max_x_i int) {
 	max_x := 0
 	max_x_i = -1
